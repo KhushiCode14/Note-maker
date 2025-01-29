@@ -3,7 +3,7 @@ const { Schema } = mongoose; //destructure schema from mongoose
 // console.log(mongoose);
 
 // Define schema
-const UserSchema = mongoose.Schema({
+const UserSchema = new Schema({
   username: {
     type: String,
     required: true,
