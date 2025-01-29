@@ -6,7 +6,13 @@ const noteSchema = new Schema(
   {
     title: String,
     description: String,
-    date: Date,
+    priority: Number,
+    status: { type: String, enum: ["active", "inactive"] },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User", // Reference to User model
+    }, // Foreign key for user model
+    // .populate("userId"); this is way to use
   },
   { timestamps: true } // Enables createdAt and updatedAt
 );
