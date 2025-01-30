@@ -4,6 +4,7 @@ import generateToken from "../utils/GenerateToken.js";
 import generateResetToken from "../utils/GenerateResetToken.js";
 import sendEmail from "../utils/SendEmails.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 const Register = async (req, res) => {
   // Get user input (name, email, password)
   const { username, email, password } = req.body;
@@ -67,7 +68,15 @@ const Login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+    // Check if the 'note' field contains valid ObjectIds
+    if (
+      user.note &&
+      user.note.some((noteId) => !mongoose.Types.ObjectId.isValid(noteId))
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Invalid note ID in user record" });
+    }
     // Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
 
@@ -89,6 +98,7 @@ const Login = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
+        note: user.note,
         token,
         lastLogin: user.lastLogin,
       },
@@ -195,6 +205,51 @@ const ForgotPassword = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+      .select("-password") // Exclude passwords
+      .populate("note");
+    res.status(200).json(users);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching users", error: error.message });
+  }
+};
+const getCurrentUser = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: "User not found, unauthorized" });
+    }
+
+    res.status(200).json(req.user);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching current user", error: error.message });
+  }
+};
+
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+
+      .select("-password") // Exclude passwords
+      .populate("note"); // Exclude passwords;
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching user", error: error.message });
+  }
+};
+
 //^ 📌 Steps to Register a User
 // Get user input (username, email, password)
 // Validate input (all fields required, email must be unique)
@@ -212,4 +267,12 @@ const ForgotPassword = async (req, res) => {
 // Update last login time
 // Generate JWT token after user is authenticated
 // Return success response with user details (excluding password)
-export { Register, Login, ResetPassword, ForgotPassword };
+export {
+  Register,
+  Login,
+  ResetPassword,
+  ForgotPassword,
+  getCurrentUser,
+  getUserById,
+  getAllUsers,
+};

@@ -22,10 +22,17 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  note: {
-    type: String,
-    default: "",
-  },
+  note: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Note",
+      default: [],
+      validate: {
+        validator: (value) => mongoose.Types.ObjectId.isValid(value),
+        message: "Invalid ObjectId in 'note' array",
+      },
+    },
+  ],
   role: {
     type: String,
     enum: ["user", "admin"],
