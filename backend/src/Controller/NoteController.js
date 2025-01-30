@@ -52,5 +52,20 @@ const CreateNote = async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 };
-
+// @ /api/note/:id
+const GetNote = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const note = await Note.findById(id).populate("userId", "-password");
+    if (!note) {
+      console.log("note not found");
+      return res.status(404).json({ message: "Note not found" });
+    }
+  } catch (err) {
+    console.error("Error fetching note:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+};
 export { CreateNote, GetNote };

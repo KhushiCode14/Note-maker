@@ -1,5 +1,5 @@
 import express from "express";
-import { CreateNote } from "../Controller/NoteController.js";
+import { CreateNote, GetNote } from "../Controller/NoteController.js";
 import protect from "../middlewares/AuthMiddleware.js";
 const NoteRoutes = express.Router();
 
@@ -14,6 +14,6 @@ NoteRoutes.delete("/:id");
 // 🔵 GET ALL NOTES FOR LOGGED-IN USER
 NoteRoutes.post("/");
 // 🟡 GET A SINGLE NOTE BY ID
-NoteRoutes.get("/:id");
+NoteRoutes.get("/:id", GetNote);
 
 export default NoteRoutes;
