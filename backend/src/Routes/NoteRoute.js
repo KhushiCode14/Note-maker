@@ -1,10 +1,11 @@
 import express from "express";
-
+import { CreateNote } from "../Controller/NoteController.js";
+import protect from "../middlewares/AuthMiddleware.js";
 const NoteRoutes = express.Router();
 
 // Define user routes
 // 🟢 CREATE A NEW NOTE
-NoteRoutes.post("/");
+NoteRoutes.post("/", protect, CreateNote);
 
 // 🟠 UPDATE A NOTE
 NoteRoutes.put("/:id");
