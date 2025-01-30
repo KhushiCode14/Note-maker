@@ -1,5 +1,9 @@
 import express from "express";
-import { CreateNote, GetNote } from "../Controller/NoteController.js";
+import {
+  CreateNote,
+  GetNote,
+  UpdateNote,
+} from "../Controller/NoteController.js";
 import protect from "../middlewares/AuthMiddleware.js";
 const NoteRoutes = express.Router();
 
@@ -8,7 +12,7 @@ const NoteRoutes = express.Router();
 NoteRoutes.post("/", protect, CreateNote);
 
 // 🟠 UPDATE A NOTE
-NoteRoutes.put("/:id");
+NoteRoutes.put("/:id", UpdateNote);
 // 🔴 DELETE A NOTE
 NoteRoutes.delete("/:id");
 // 🔵 GET ALL NOTES FOR LOGGED-IN USER

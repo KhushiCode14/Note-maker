@@ -68,4 +68,25 @@ const GetNote = async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 };
-export { CreateNote, GetNote };
+// @api/note:id
+const UpdateNote = async (req, res) => {
+  const { id } = req.params;
+  const { title, description } = req.body;
+  try {
+    const updatedNote = await Note.findByIdAndUpdate(
+      id,
+      { title, description },
+      { new: true } // Ensure we get the updated note document
+    );
+    if (!updatedNote) {
+      console.log("Note not found");
+      return res.status(404).json({ message: "Note not found" });
+    }
+  } catch (err) {
+    console.error("Error updating note:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+};
+export { CreateNote, GetNote, UpdateNote };
