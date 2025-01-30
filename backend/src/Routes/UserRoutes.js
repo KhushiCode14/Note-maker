@@ -1,10 +1,10 @@
 import express from "express";
-import { Register } from "../Controller/UserController.js";
+import { Register, Login } from "../Controller/UserController.js";
 
 const UserRoutes = express.Router();
 
 // Define user routes
-UserRoutes.post("/login");
+UserRoutes.post("/login", Login);
 UserRoutes.post("/register", Register);
 UserRoutes.post("/forgotPassword");
 UserRoutes.post("/resetPassword");
