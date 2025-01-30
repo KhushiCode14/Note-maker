@@ -4,6 +4,7 @@ import {
   DeleteNote,
   GetNote,
   UpdateNote,
+  SearchNote,
 } from "../Controller/NoteController.js";
 import protect from "../middlewares/AuthMiddleware.js";
 const NoteRoutes = express.Router();
@@ -16,8 +17,10 @@ NoteRoutes.post("/", protect, CreateNote);
 NoteRoutes.put("/:id", protect, UpdateNote);
 // 🔴 DELETE A NOTE
 NoteRoutes.delete("/:id", protect, DeleteNote);
-// // 🔵 GET ALL NOTES FOR LOGGED-IN USER
-// NoteRoutes.post("/");
+
+// 🔵  Search for a note via title description, date
+NoteRoutes.get("/search", protect, SearchNote);
+
 // 🟡 GET A SINGLE NOTE BY ID
 NoteRoutes.get("/:id", protect, GetNote);
 

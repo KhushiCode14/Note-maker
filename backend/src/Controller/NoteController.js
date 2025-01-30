@@ -55,6 +55,10 @@ const CreateNote = async (req, res) => {
 // @ /api/note/:id
 const GetNote = async (req, res) => {
   const { id } = req.params;
+  // Check if the ID is a valid MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid Note ID" });
+  }
   try {
     const note = await Note.findById(id).populate("userId", "-password");
     if (!note) {
@@ -62,7 +66,7 @@ const GetNote = async (req, res) => {
       return res.status(404).json({ message: "Note not found" });
     }
     res.status(200).json(note);
-  } catch (err) {
+  } catch (error) {
     console.error("Error fetching note:", error);
     res
       .status(500)
@@ -109,4 +113,31 @@ const DeleteNote = async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 };
-export { CreateNote, GetNote, UpdateNote, DeleteNote };
+// @api/note/search?query=
+// @api/note/search?query=
+const SearchNote = async (req, res) => {
+  const { query } = req.query; // Use 'query' instead of 'title' for a more flexible search term
+  try {
+    // Search for notes where either title or description matches the query
+    const notes = await Note.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } }, // Case-insensitive search for title
+        { description: { $regex: query, $options: "i" } }, // Case-insensitive search for description
+      ],
+    });
+
+    if (notes.length === 0) {
+      console.log("No notes found matching the query");
+      return res.status(404).json({ message: "No notes found" });
+    }
+
+    res.status(200).json(notes);
+  } catch (error) {
+    console.error("Error searching notes:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+export { CreateNote, GetNote, UpdateNote, DeleteNote, SearchNote };
