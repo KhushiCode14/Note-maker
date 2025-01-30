@@ -1,15 +1,18 @@
 // utils/sendEmail.js
 import nodemailer from "nodemailer";
-import config from "../config/config";
+import config from "../config/config.js";
 // nodemailer -->send emails (JS library)
 // Set up Nodemailer transport
 const transporter = nodemailer.createTransport({
   service: "gmail", // Can be replaced with another service like 'SendGrid'
+  secure: true,
+  host: 456,
   auth: {
     user: config.email_username, // Your email address
     pass: config.email_password, // Your email password (or app-specific password)
   },
 });
+// console.log(transporter/);
 
 // Function to send email
 const sendEmail = async (to, subject, htmlContent) => {
@@ -26,6 +29,7 @@ const sendEmail = async (to, subject, htmlContent) => {
     console.log("Email sent successfully");
   } catch (error) {
     console.error("Error sending email:", error);
+
     throw new Error("Failed to send email. Please try again later.");
   }
 };

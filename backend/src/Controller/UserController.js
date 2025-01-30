@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
 import User from "../Models/UserModel.js";
 import generateToken from "../utils/GenerateToken.js";
-
+import generateResetToken from "../utils/GenerateResetToken.js";
+import sendEmail from "../utils/SendEmails.js";
+import jwt from "jsonwebtoken";
 const Register = async (req, res) => {
   // Get user input (name, email, password)
   const { username, email, password } = req.body;
@@ -96,6 +98,103 @@ const Login = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+// TODO: Implement password reset functionality
+// @ reset password
+// @reset password
+const ResetPassword = async (req, res) => {
+  // 1. Get user input (token, newPassword, username)
+  const { token, newPassword, username } = req.body;
+
+  if (!token || !newPassword || !username) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  try {
+    // 2. Verify the token
+    const decoded = jwt.verify(token, process.env.RESET_TOKEN_SECRET); // Ensure the token is valid
+
+    // 3. Find user by username
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 4. Check if token matches the one stored in the user record and verify expiry
+    if (
+      user.resetPasswordToken !== token ||
+      Date.now() > user.resetPasswordExpires
+    ) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    // 5. Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // 6. Update the user's password and clear reset fields
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    // 7. Send success response
+    res.json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error during password reset:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to reset password. Please try again later." });
+  }
+};
+// @ forgot password
+//   /api/user/forgotPassword
+// @forgot password
+const ForgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  // 1. Check if the email is provided
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  // 2. Find the user by email
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  // 3. Generate reset token and expiration time
+  const resetToken = generateResetToken(user._id);
+  const resetTokenExpiration = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+  // 4. Update the user's reset token and expiration time
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpires = resetTokenExpiration;
+  await user.save();
+
+  // 5. Create reset link (the URL for your frontend reset password page)
+  const resetLink = `http://yourfrontend.com/reset-password?token=${resetToken}`; // Adjust the URL to your reset route
+
+  // 6. Prepare email content
+  const htmlContent = `
+    <p>Hi ${user.username},</p>
+    <p>You requested a password reset. Click the link below to reset your password:</p>
+    <a href="${resetLink}">Reset Password</a>
+    <p>This link will expire in 10 minutes.</p>
+  `;
+  console.log(resetToken);
+  // 7. Send the email using sendEmail function
+  try {
+    await sendEmail(user.email, "Password Reset Request", htmlContent);
+    res.json({ message: "Password reset email sent" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to send email. Please try again later." });
+  }
+};
+
 //^ 📌 Steps to Register a User
 // Get user input (username, email, password)
 // Validate input (all fields required, email must be unique)
@@ -113,4 +212,4 @@ const Login = async (req, res) => {
 // Update last login time
 // Generate JWT token after user is authenticated
 // Return success response with user details (excluding password)
-export { Register, Login };
+export { Register, Login, ResetPassword, ForgotPassword };
