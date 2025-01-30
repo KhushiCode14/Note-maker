@@ -1,6 +1,7 @@
 import express from "express";
 import {
   CreateNote,
+  DeleteNote,
   GetNote,
   UpdateNote,
 } from "../Controller/NoteController.js";
@@ -12,12 +13,12 @@ const NoteRoutes = express.Router();
 NoteRoutes.post("/", protect, CreateNote);
 
 // 🟠 UPDATE A NOTE
-NoteRoutes.put("/:id", UpdateNote);
+NoteRoutes.put("/:id", protect, UpdateNote);
 // 🔴 DELETE A NOTE
-NoteRoutes.delete("/:id", DeleteNote);
-// 🔵 GET ALL NOTES FOR LOGGED-IN USER
-NoteRoutes.post("/");
+NoteRoutes.delete("/:id", protect, DeleteNote);
+// // 🔵 GET ALL NOTES FOR LOGGED-IN USER
+// NoteRoutes.post("/");
 // 🟡 GET A SINGLE NOTE BY ID
-NoteRoutes.get("/:id", GetNote);
+NoteRoutes.get("/:id", protect, GetNote);
 
 export default NoteRoutes;
