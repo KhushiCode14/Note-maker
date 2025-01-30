@@ -61,6 +61,7 @@ const GetNote = async (req, res) => {
       console.log("note not found");
       return res.status(404).json({ message: "Note not found" });
     }
+    res.status(200).json(note);
   } catch (err) {
     console.error("Error fetching note:", error);
     res
@@ -82,11 +83,30 @@ const UpdateNote = async (req, res) => {
       console.log("Note not found");
       return res.status(404).json({ message: "Note not found" });
     }
-  } catch (err) {
+    res.status(200).json(updatedNote);
+  } catch (error) {
     console.error("Error updating note:", error);
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });
   }
 };
-export { CreateNote, GetNote, UpdateNote };
+// delete note
+// @api/note/:id
+const DeleteNote = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedNote = await Note.findByIdAndDelete(id);
+    if (!deletedNote) {
+      console.log("Note not found");
+      return res.status(404).json({ message: "Note not found" });
+    }
+    res.status(200).json({ message: "Note deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting note:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+};
+export { CreateNote, GetNote, UpdateNote, DeleteNote };

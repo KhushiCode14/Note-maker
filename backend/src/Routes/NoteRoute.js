@@ -14,7 +14,7 @@ NoteRoutes.post("/", protect, CreateNote);
 // 🟠 UPDATE A NOTE
 NoteRoutes.put("/:id", UpdateNote);
 // 🔴 DELETE A NOTE
-NoteRoutes.delete("/:id");
+NoteRoutes.delete("/:id", DeleteNote);
 // 🔵 GET ALL NOTES FOR LOGGED-IN USER
 NoteRoutes.post("/");
 // 🟡 GET A SINGLE NOTE BY ID
