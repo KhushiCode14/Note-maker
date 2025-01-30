@@ -6,7 +6,11 @@ const _config = () => ({
   env: process.env.NODE_ENV || "development",
   port: process.env.PORT || 3000,
   mongo_url: process.env.MONGODB_URI,
-  jwt_secret: process.env.JWT_SECRET, // Uncomment if needed
+  reset_secret: process.env.RESET_TOKEN_SECRET,
+  jwt_secret: process.env.JWT_SECRET,
+  email_username: process.env.EMAIL_USER,
+  email_password: process.env.EMAIL_PASSWORD,
+  // Uncomment if needed
   // AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID, // Uncomment if needed
   // AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY, // Uncomment if needed
 });
