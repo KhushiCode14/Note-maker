@@ -9,7 +9,7 @@ const noteSchema = new Schema(
     priority: Number,
     status: { type: String, enum: ["active", "inactive"] },
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User", // Reference to User model
     }, // Foreign key for user model
     // .populate("userId"); this is way to use

@@ -1,5 +1,8 @@
+import mongoose from "mongoose";
 import Note from "../Models/NoteModel.js";
-
+import User from "../Models/UserModel.js";
+// @api/note
+// @
 const CreateNote = async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -9,14 +12,39 @@ const CreateNote = async (req, res) => {
       return res.status(401).json({ message: "User not found, unauthorized" });
     }
 
-    let newNote = new Note({ title, description, userId: user._id });
+    if (!title || !description) {
+      return res
+        .status(400)
+        .json({ message: "Title and description are required" });
+    }
 
-    await newNote.save(); // Save the document first
+    // Create and save the new note
+    const newNote = await new Note({
+      title,
+      description,
+      userId: user._id,
+    }).save();
 
-    // Populate the user details after saving
-    newNote = await Note.findById(newNote._id).populate("userId", "-password");
+    // Validate new note ID
+    if (!mongoose.Types.ObjectId.isValid(newNote._id)) {
+      return res.status(400).json({ message: "Invalid note ID" });
+    }
 
-    res.status(201).json(newNote); // ✅ Only one response
+    // Update user document with new note ID
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { $push: { note: newNote._id } }
+      //   { new: true } // Ensure we get the updated user document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Populate user details in the note response
+    const populatedNote = await newNote.populate("userId", "-password");
+
+    res.status(201).json(populatedNote);
   } catch (error) {
     console.error("Error creating note:", error);
     res
@@ -25,4 +53,4 @@ const CreateNote = async (req, res) => {
   }
 };
 
-export { CreateNote };
+export { CreateNote, GetNote };
