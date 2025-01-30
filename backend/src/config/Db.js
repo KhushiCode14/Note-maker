@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
-//Set up default mongoose connection
-const ConnectDB = () => {
-  var mongoDB = "mongodb://127.0.0.1/my_database";
-  mongoose.connect(mongoDB);
-  //Get the default connection
-  var db = mongoose.connection;
-  //Bind connection to error event (to get notification of connection errors)
-  db.on("error", console.error.bind(console, "MongoDB connection error:"));
-  db.on("error", console.error.bind(console, "MongoDB connection error:"));
-  console.log("mongodb Connected");
+import config from "./config.js";
+console.log(config.mongo_url);
+// Set up default mongoose connection
+const ConnectDB = async () => {
+  try {
+    await mongoose.connect(config.mongo_url);
+
+    console.log("MongoDB Connected Successfully");
+  } catch (error) {
+    console.error("MongoDB Connection Error:", error);
+    process.exit(1); // Exit process on failure
+  }
 };
 
 export default ConnectDB;
