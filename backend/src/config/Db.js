@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import config from "./config.js";
-console.log(config.mongo_url);
+// console.log(config.mongo_url);
 // Set up default mongoose connection
 const ConnectDB = async () => {
   try {

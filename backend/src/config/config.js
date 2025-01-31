@@ -23,7 +23,7 @@ const config = _config();
 Object.freeze(config);
 
 // Log the configuration object
-console.log(config);
+// console.log(config);
 
 // Export the configuration as 'config'
 export default config;

@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { NoteProvider } from "./context/NoteContext.jsx";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
