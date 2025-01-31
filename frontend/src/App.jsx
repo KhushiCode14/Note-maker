@@ -1,19 +1,36 @@
-import React from "react";
-import BasicTabs from "./pages/Home";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Auth from "./components/Auth/Auth";
 
+import Note from "./components/Note/Note";
 const App = () => {
-  const LoginForm = () => <div>Login Form</div>;
-  const RegisterForm = () => <div>Register Form</div>;
-  const AddNote = () => <div>Add Note Form</div>;
-  const SeeNote = () => <div>See Note Form</div>;
-  const tabsData = [
-    { label: "Login", content: <LoginForm /> },
-    { label: "Register", content: <RegisterForm /> },
-    { label: "Add Note", content: <AddNote /> },
-    { label: "See Note", content: <SeeNote /> },
-  ];
+  return (
+    <>
+      <Router>
+        <ToastContainer />
+        <Routes>
+          {/* Redirect root path to login */}
+          <Route path="/" element={<Navigate to="/auth/login" />} />
 
-  return <BasicTabs tabs={tabsData} />;
+          {/* Authentication Routes */}
+          <Route path="/auth/*" element={<Auth />} />
+
+          {/* Notes Management Routes */}
+          <Route path="/note/*" element={<Note />} />
+
+          {/* Catch-all: Redirect unknown routes to Login */}
+          <Route path="*" element={<Navigate to="/auth/login" />} />
+        </Routes>
+      </Router>
+      <ToastContainer />
+    </>
+  );
 };
 
 export default App;
