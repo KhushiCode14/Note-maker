@@ -51,7 +51,9 @@ export default function BasicTabs({ tabs }) {
     setValue(newValue);
     navigate(tabs[newValue].path);
   };
-
+  React.useEffect(() => {
+    setValue(currentTabIndex !== -1 ? currentTabIndex : 0);
+  }, [currentTabIndex]);
   return (
     <Container
       maxWidth="sm"

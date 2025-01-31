@@ -9,6 +9,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { AuthState } from "../context/AuthContext"; // Adjust the import path
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -38,6 +39,7 @@ const LandingPage = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Photos
           </Typography>
+          <Link to="/note/add">Add Note</Link>
           <div>
             <IconButton
               size="large"

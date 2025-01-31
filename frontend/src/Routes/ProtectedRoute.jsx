@@ -1,30 +1,16 @@
 import { Navigate } from "react-router-dom";
-import { AuthState } from "../context/AuthContext";
+
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { AuthState } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = AuthState();
-  const [loading, setLoading] = useState(true);
+  const { isAuthenticated, redirectToLogin } = AuthState();
 
-  useEffect(() => {
-    // Check if token exists in localStorage and update the loading state
-    if (localStorage.getItem("token")) {
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>; // Show loading state until we confirm auth status
-  }
-
-  if (!isAuthenticated) {
+  if (redirectToLogin) {
     return <Navigate to="/auth/login" />;
   }
 
-  return children;
+  return isAuthenticated ? children : <Navigate to="/auth/login" />;
 };
 
 ProtectedRoute.propTypes = {

@@ -1,8 +1,13 @@
+import ProtectedRoute from "./ProtectedRoute"; // Import the ProtectedRoute component
 import LandingPage from "../pages/LandingPage";
 
 const LandingRoutes = {
   path: "/",
-  element: <LandingPage />,
+  element: (
+    <ProtectedRoute>
+      <LandingPage />
+    </ProtectedRoute>
+  ),
 };
 
 export default LandingRoutes;
