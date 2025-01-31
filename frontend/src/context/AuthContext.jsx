@@ -2,16 +2,36 @@ import { createContext, useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import { toast } from "react-toastify";
+// import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState();
   const [loading, setLoading] = useState(false); // For tracking loading state
   const [error, setError] = useState(null);
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
+  // Initialize navigate to redirect
+
   useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    // If a token is found in localStorage, set the user to be authenticated
+    if (storedToken && storedUser) {
+      setIsAuthenticated(true);
+      setUser(storedUser);
+      setToken(storedToken);
+    } else {
+      setIsAuthenticated(false);
+      setRedirectToLogin(true);
+
+      // Redirect to login page if no token
+    }
+
     console.log("Authentication state changed: ", isAuthenticated);
-  }, [isAuthenticated]); // Logs whenever isAuthenticated changes
+  }, []);
   const login = async (formData) => {
     setLoading(true);
     setError(null);
@@ -27,9 +47,11 @@ const AuthProvider = ({ children }) => {
 
       const { token, user } = response.data;
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
       setIsAuthenticated(true);
       setUser(user);
       setLoading(false);
+      setToken(token);
       console.log(user, token, isAuthenticated);
 
       toast.success(`Welcome, ${user.username}! Login successful!`, {
@@ -53,6 +75,7 @@ const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     setUser(null);
     localStorage.removeItem("token");
+    setRedirectToLogin(true); // Redirect to login page after logout
   };
   const register = async (formData) => {
     setLoading(true);
@@ -88,7 +111,17 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, login, logout, register, loading, error }}
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        logout,
+        register,
+        loading,
+        error,
+        token,
+        redirectToLogin,
+      }}
     >
       {children}
     </AuthContext.Provider>
