@@ -5,6 +5,7 @@ import {
   GetNote,
   UpdateNote,
   SearchNote,
+  GetAllNotes,
 } from "../Controller/NoteController.js";
 import protect from "../middlewares/AuthMiddleware.js";
 const NoteRoutes = express.Router();
@@ -23,5 +24,7 @@ NoteRoutes.get("/search", protect, SearchNote);
 
 // 🟡 GET A SINGLE NOTE BY ID
 NoteRoutes.get("/:id", protect, GetNote);
+// 🟡 GET A ALL NOTE BY USER
+NoteRoutes.get("/", protect, GetAllNotes);
 
 export default NoteRoutes;

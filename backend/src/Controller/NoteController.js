@@ -139,5 +139,25 @@ const SearchNote = async (req, res) => {
       .json({ message: "Internal Server Error", error: error.message });
   }
 };
+// @api/note/getAll
+const GetAllNotes = async (req, res) => {
+  try {
+    // Fetch all notes and populate the user details
+    const notes = await Note.find().populate("userId", "-password");
 
-export { CreateNote, GetNote, UpdateNote, DeleteNote, SearchNote };
+    // If no notes are found
+    if (notes.length === 0) {
+      return res.status(404).json({ message: "No notes found" });
+    }
+
+    // Return all notes
+    res.status(200).json(notes);
+  } catch (error) {
+    console.error("Error fetching all notes:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+export { CreateNote, GetNote, UpdateNote, DeleteNote, SearchNote, GetAllNotes };
