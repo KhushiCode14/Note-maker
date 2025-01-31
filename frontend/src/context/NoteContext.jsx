@@ -10,7 +10,7 @@ export const NoteProvider = ({ children }) => {
   const [note, setNote] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
+  const BaseUrl = import.meta.env.VITE_BACKEND_URL;
   // Post note function
   const PostNote = async (formData, token) => {
     if (!token) {
@@ -18,16 +18,12 @@ export const NoteProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.post(
-        "http://localhost:3500/api/note",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.post(`${BaseUrl}/api/note`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.status === 201) {
         // If the post is successful, update the notes state
@@ -49,7 +45,7 @@ export const NoteProvider = ({ children }) => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:3500/api/note/${id}`, {
+      const response = await axios.get(`${BaseUrl}/api/note/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -72,7 +68,7 @@ export const NoteProvider = ({ children }) => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:3500/api/note`, {
+      const response = await axios.get(`${BaseUrl}/api/note`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -96,7 +92,7 @@ export const NoteProvider = ({ children }) => {
 
     try {
       const response = await axios.put(
-        `http://localhost:3500/api/note/${id}`,
+        `${BaseUrl}/api/note/${id}`,
         updatedData,
         {
           headers: {
@@ -124,15 +120,12 @@ export const NoteProvider = ({ children }) => {
     }
 
     try {
-      const response = await axios.delete(
-        `http://localhost:3500/api/note/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${BaseUrl}/api/note/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status === 200) {
         // Remove the deleted note from the state
         setNote((prevNotes) => prevNotes.filter((note) => note._id !== id));

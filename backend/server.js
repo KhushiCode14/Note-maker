@@ -5,7 +5,7 @@ import app from "./src/app.js";
 import ConnectDB from "./src/config/Db.js";
 import config from "./src/config/config.js";
 
-const PORT = config.port || 3000;
+const PORT = config.port;
 const host = "localhost";
 
 const createServer = async () => {

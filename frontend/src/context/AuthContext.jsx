@@ -32,18 +32,15 @@ const AuthProvider = ({ children }) => {
 
     console.log("Authentication state changed: ", isAuthenticated);
   }, []);
+  const BaseUrl = import.meta.env.VITE_BACKEND_URL;
+  // console.log(BaseUrl);
   const login = async (formData) => {
     setLoading(true);
     setError(null);
-
     try {
-      const response = await axios.post(
-        "http://localhost:3500/api/user/login",
-        formData,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const response = await axios.post(`${BaseUrl}/api/user/login`, formData, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       const { token, user } = response.data;
       localStorage.setItem("token", token);
@@ -82,7 +79,7 @@ const AuthProvider = ({ children }) => {
     setError(null); // Reset error on new registration attempt
 
     toast.promise(
-      axios.post("http://localhost:3500/api/user/register", formData, {
+      axios.post(`${BaseUrl}/api/user/register`, formData, {
         headers: { "Content-Type": "application/json" },
       }),
       {
