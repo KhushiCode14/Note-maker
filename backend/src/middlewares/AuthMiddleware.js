@@ -1,27 +1,28 @@
-// import jwt from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 import User from "../Models/UserModel.js";
+// Assuming you have a User model
+import config from "../config/config.js";
 
 const protect = async (req, res, next) => {
-  let token;
+  const token = req.header("Authorization")?.replace("Bearer ", "");
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "No token, authorization denied" });
+  }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    const decoded = jwt.verify(token, config.jwt_secret); // Replace with your secret key
+    const user = await User.findById(decoded.id); // Find user by ID (ensure it's in the token)
 
-      req.user = await User.findById(decoded.id).select("-password"); // Attach user to request
-      next();
-    } catch (error) {
-      res.status(401).json({ message: "Not authorized, invalid token" });
+    if (!user) {
+      return res.status(401).json({ message: "User not found, unauthorized" });
     }
-  } else {
-    res.status(401).json({ message: "Not authorized, no token provided" });
+
+    req.user = user; // Attach user to the request object for future use
+    next(); // Proceed to the next middleware (getCurrentUser)
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ message: "Token is invalid or expired" });
   }
 };
-
 export default protect;

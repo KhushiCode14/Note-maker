@@ -100,7 +100,7 @@ const Register = () => {
       <FormControl sx={{ m: 1, width: "100%" }} variant="outlined">
         <InputLabel htmlFor="outlined-adornment-password">Email</InputLabel>
         <OutlinedInput
-          id="outlined-adornment-password"
+          id="outlined-adornment-email"
           type="email"
           name="email"
           value={formData.email}

@@ -1,33 +1,40 @@
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
+  createBrowserRouter,
   Navigate,
+  RouterProvider,
 } from "react-router-dom";
-import Auth from "./components/Auth/Auth";
 
-import Note from "./components/Note/Note";
+// import ProtectedRoute from "./Routes/ProtectedRoute";
+import LandingRoutes from "./Routes/LandingPageRoute";
+import AuthRoutes from "./Routes/AuthRoutes";
+import NoteRoutes from "./Routes/NoteRoute";
+// import ProtectedRoute from "./Routes/ProtectedRoute";
+// import LandingPage from "./pages/LandingPage";
+// import ProtectedRoute from "./Routes/ProtectedRoute";
+
 const App = () => {
+  const router = createBrowserRouter([
+    // Protected Route for LandingPage
+    // <ProtectedRoute key={"landing"}>
+    //   <LandingPage />
+    // </ProtectedRoute>,
+    LandingRoutes,
+    // Authentication Routes
+    AuthRoutes,
+    // Notes Management Routes
+    NoteRoutes,
+    // Catch-all: Redirect unknown routes to Login
+    {
+      path: "*",
+      element: <Navigate to="/auth/login" />,
+    },
+  ]);
+
   return (
     <>
-      <Router>
-        <ToastContainer />
-        <Routes>
-          {/* Redirect root path to login */}
-          <Route path="/" element={<Navigate to="/auth/login" />} />
-
-          {/* Authentication Routes */}
-          <Route path="/auth/*" element={<Auth />} />
-
-          {/* Notes Management Routes */}
-          <Route path="/note/*" element={<Note />} />
-
-          {/* Catch-all: Redirect unknown routes to Login */}
-          <Route path="*" element={<Navigate to="/auth/login" />} />
-        </Routes>
-      </Router>
+      <RouterProvider router={router} />
       <ToastContainer />
     </>
   );
