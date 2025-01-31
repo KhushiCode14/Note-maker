@@ -4,7 +4,7 @@ dotenv.config();
 // Configuration function
 const _config = () => ({
   env: process.env.NODE_ENV || "development",
-  port: process.env.PORT || 3000,
+  port: process.env.PORT,
   mongo_url: process.env.MONGODB_URI,
   reset_secret: process.env.RESET_TOKEN_SECRET,
   jwt_secret: process.env.JWT_SECRET,
