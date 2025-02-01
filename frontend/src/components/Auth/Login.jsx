@@ -33,7 +33,7 @@ const Login = () => {
     event.preventDefault();
 
     await login(formData);
-    navigate("/");
+    navigate("/note/add");
   };
   const handleMouseDownPassword = (event) => {
     event.preventDefault();

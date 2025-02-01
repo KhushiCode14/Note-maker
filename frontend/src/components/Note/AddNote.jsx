@@ -14,6 +14,8 @@ import { NoteState } from "../../context/NoteContext";
 import { AuthState } from "../../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 const AddNote = () => {
+  const { token } = AuthState();
+  console.log(token);
   const { state } = useLocation();
   const { PostNote, UpdateNote } = NoteState();
   const [formData, setFormData] = useState({
@@ -24,8 +26,7 @@ const AddNote = () => {
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
-  const { token } = AuthState();
-
+  console.log(token, " at AddNote");
   const navigate = useNavigate();
   // const token = localStorage.getItem("token");
   const handleSubmit = async (event) => {

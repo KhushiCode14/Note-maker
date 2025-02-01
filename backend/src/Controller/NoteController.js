@@ -142,18 +142,23 @@ const SearchNote = async (req, res) => {
 // @api/note/getAll
 const GetAllNotes = async (req, res) => {
   try {
-    // Fetch all notes and populate the user details
-    const notes = await Note.find().populate("userId", "-password");
+    const user = req.user; // User info from the protect middleware
 
-    // If no notes are found
+    // Fetch all notes that belong to the logged-in user
+    const notes = await Note.find({ userId: user._id }).populate(
+      "userId",
+      "-password"
+    );
+
+    // If no notes are found for this user
     if (notes.length === 0) {
-      return res.status(404).json({ message: "No notes found" });
+      return res.status(404).json({ message: "No notes found for this user" });
     }
 
-    // Return all notes
+    // Return the user's notes
     res.status(200).json(notes);
   } catch (error) {
-    console.error("Error fetching all notes:", error);
+    console.error("Error fetching user's notes:", error);
     res
       .status(500)
       .json({ message: "Internal Server Error", error: error.message });

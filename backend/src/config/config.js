@@ -6,7 +6,7 @@ const _config = () => ({
   // env: process.env.NODE_ENV || "development",
   port: process.env.PORT,
   mongo_url: process.env.MONGODB_URI,
-  reset_secret: process.env.RESET_TOKEN_SECRET,
+  reset_secret: process.env.RESET_TOzKEN_SECRET,
   jwt_secret: process.env.JWT_SECRET,
   email_username: process.env.EMAIL_USER,
   email_password: process.env.EMAIL_PASSWORD,

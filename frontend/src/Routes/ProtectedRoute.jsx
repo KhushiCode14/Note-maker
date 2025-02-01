@@ -4,11 +4,13 @@ import PropTypes from "prop-types";
 import { AuthState } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, redirectToLogin } = AuthState();
+  const { isAuthenticated } = AuthState();
 
-  if (redirectToLogin) {
-    return <Navigate to="/auth/login" />;
-  }
+  console.log(isAuthenticated);
+
+  // if (redirectToLogin) {
+  //   return <Navigate to="/auth/login" />;
+  // }
 
   return isAuthenticated ? children : <Navigate to="/auth/login" />;
 };

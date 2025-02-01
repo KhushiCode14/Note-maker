@@ -12,8 +12,9 @@ const protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, config.jwt_secret); // Replace with your secret key
+    console.log(decoded);
     const user = await User.findById(decoded.id); // Find user by ID (ensure it's in the token)
-
+    console.log(user);
     if (!user) {
       return res.status(401).json({ message: "User not found, unauthorized" });
     }

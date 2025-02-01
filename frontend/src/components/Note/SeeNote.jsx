@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 function SeeNote() {
   const { note, GetAllNote, DeleteNote } = NoteState();
   const { token, isAuthenticated } = AuthState();
+  console.log(token, isAuthenticated);
   console.log(isAuthenticated);
   useEffect(() => {
     if (isAuthenticated) {
@@ -38,7 +39,7 @@ function SeeNote() {
             <Card
               variant="outlined"
               key={n._id}
-              className="rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+              // className="rounded-xl   duration-300"
               sx={{
                 // background: "#fff",
                 borderRadius: "12px",
@@ -48,7 +49,7 @@ function SeeNote() {
                 maxWidth: "600px",
                 // boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                 cursor: "pointer",
-                p: 2,
+                p: 1,
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "start",
@@ -56,7 +57,7 @@ function SeeNote() {
             >
               <CardContent>
                 <Typography
-                  variant="h6"
+                  variant="h5"
                   sx={{ fontWeight: "bold", color: "#333" }}
                 >
                   {n.title}

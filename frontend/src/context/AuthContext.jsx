@@ -15,24 +15,18 @@ const AuthProvider = ({ children }) => {
   // Initialize navigate to redirect
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    // If a token is found in localStorage, set the user to be authenticated
-    if (storedToken && storedUser) {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (token && user) {
       setIsAuthenticated(true);
-      setUser(storedUser);
-      setToken(storedToken);
+      setUser(user);
+      setToken(token);
     } else {
       setIsAuthenticated(false);
-      setRedirectToLogin(true);
-
-      // Redirect to login page if no token
     }
-
-    console.log("Authentication state changed: ", isAuthenticated);
   }, []);
   const BaseUrl = import.meta.env.VITE_BACKEND_URL;
+  console.log(BaseUrl);
   // console.log(BaseUrl);
   const login = async (formData) => {
     setLoading(true);
@@ -46,21 +40,21 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       setIsAuthenticated(true);
+      setRedirectToLogin(false);
       setUser(user);
       setLoading(false);
       setToken(token);
       console.log(user, token, isAuthenticated);
-
+      console.log(response);
       toast.success(`Welcome, ${user.username}! Login successful!`, {
         position: "top-right",
         autoClose: 3000,
       });
     } catch (err) {
-      const errorMessage =
-        err.response?.data?.error || "Login failed! Please try again.";
+      const errorMessage = err.message || "Login failed! Please try again.";
       setError(errorMessage);
       setLoading(false);
-
+      console.log(err);
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 3000,
@@ -69,41 +63,54 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
     localStorage.removeItem("token");
-    setRedirectToLogin(true); // Redirect to login page after logout
+    localStorage.removeItem("user");
+
+    setToken(null);
+    setUser(null);
+    setIsAuthenticated(false);
+    setRedirectToLogin(true);
+    toast.info("You have been logged out!", {
+      position: "top-right",
+      autoClose: 2000,
+    });
   };
   const register = async (formData) => {
     setLoading(true);
-    setError(null); // Reset error on new registration attempt
+    setError(null);
 
-    toast.promise(
-      axios.post(`${BaseUrl}/api/user/register`, formData, {
-        headers: { "Content-Type": "application/json" },
-      }),
-      {
-        pending: "Registering your account...",
-        success: (response) => {
-          const { token, user } = response.data;
-          login(token, user); // Auto-login after successful registration
-          return `Welcome, ${user.username}! Registration successful!`;
-        },
-        error: (err) => {
-          const errorMessage =
-            err.response?.data?.error ||
-            "Registration failed! Please try again.";
-          setError(errorMessage);
-          return errorMessage;
-        },
-      },
-      {
+    try {
+      const response = await axios.post(
+        `${BaseUrl}/api/user/register`,
+        formData,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const { token, user } = response.data;
+
+      // Save token & user in localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      setToken(token);
+      setUser(user);
+      setIsAuthenticated(true);
+      setRedirectToLogin(false);
+
+      toast.success(`Welcome, ${user.username}! Registration successful!`, {
         position: "top-right",
         autoClose: 3000,
-      }
-    );
-
-    setLoading(false); // Reset loading state
+      });
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Registration failed! Please try again."
+      );
+      toast.error(error, { position: "top-right", autoClose: 3000 });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -124,11 +131,11 @@ const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
-export const AuthState = () => {
+const AuthState = () => {
   return useContext(AuthContext);
 };
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export { AuthProvider };
+export { AuthProvider, AuthState };
