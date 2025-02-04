@@ -15,7 +15,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })
 );
-console.log(config.frontend_url, config);
+console.log(config.frontend_url);
 app.use("/api/user", UserRoutes);
 app.use("/api/note", NoteRoutes);
 export default app;
