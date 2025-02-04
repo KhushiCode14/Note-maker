@@ -34,6 +34,31 @@ Built using modern web technologies like **Express.js**, **MongoDB**, and **MySQ
 Before you begin, ensure you have the following installed:
 - **Node.js** (v16.x or higher) - [Install Node.js](https://nodejs.org/)
 - **MongoDB** (for local development or use a MongoDB Cloud instance)
+# API Documentation
+
+The API is built with Express.js, and you can use it to perform CRUD operations on notes, authenticate users, and more.
+
+## Authentication
+
+- **POST** `/api/auth/login`  
+  Login user
+
+- **POST** `/api/auth/register`  
+  Register new user
+
+## Notes
+
+- **GET** `/api/notes`  
+  Get all notes for the logged-in user
+
+- **POST** `/api/notes`  
+  Create a new note
+
+- **PUT** `/api/notes/:id`  
+  Update an existing note
+
+- **DELETE** `/api/notes/:id`  
+  Delete a note
 
 ### Installation
 1. Clone the repository:
