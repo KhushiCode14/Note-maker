@@ -14,11 +14,26 @@
     "backend",
     "api",
     "mongodb",
-    "mysql"
+    "mysql",
+    "note-taking app",
+    "notepad online",
+    "task manager",
+    "to-do list",
+    "cloud notes",
+    "secure notes",
+    "productivity tool"
   ],
-  "author": "",
+  "author": "Khushi Kumari",
   "license": "ISC",
-  "description": "Backend for a web application using Express.js, MongoDB, and other common technologies.",
+  "description": "Note Maker is a fast, secure, and user-friendly online notepad designed for seamless note-taking. Whether you're jotting down ideas, managing tasks, or organizing thoughts, this powerful tool provides a distraction-free experience. With cloud storage support, real-time access, and end-to-end security, it’s perfect for professionals, students, and creators. Built using modern web technologies like Express.js, MongoDB, and MySQL, Note Maker ensures a smooth and efficient workflow. 🚀 Elevate your productivity with a reliable, clutter-free note-taking solution.",
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/KhushiCode14/Note-maker"
+  },
+  "bugs": {
+    "url": "https://github.com/KhushiCode14/Note-maker"
+  },
+  "homepage": "https://github.com/KhushiCode14/Note-maker",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
