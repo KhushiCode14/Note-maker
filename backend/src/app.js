@@ -9,11 +9,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      config.frontend_url,
-      "http://localhost:5173",
-      "http://localhost:5174",
-    ], // Fixed incorrect URL
+    origin: [config.frontend_url], // Fixed incorrect URL
     credentials: true, // Allows cookies & authentication headers
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
