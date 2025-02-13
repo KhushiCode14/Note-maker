@@ -5,7 +5,8 @@
 Note Maker is a fast, secure, and user-friendly online notepad designed for seamless note-taking. Whether you're jotting down ideas, managing tasks, or organizing thoughts, this powerful tool provides a distraction-free experience. With cloud storage support, real-time access, and end-to-end security, it’s perfect for professionals, students, and creators.
 
 Built using modern web technologies like **Express.js**, **MongoDB**, and **MySQL**, Note Maker ensures a smooth and efficient workflow. 🚀
-
+## Live demo
+🔗[Try it Here](https://note-maker-khushicode.netlify.app/auth/login)
 ## Technologies Used
 
 ### Frontend:
